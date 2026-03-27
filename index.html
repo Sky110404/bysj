@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能考勤与薪资管理系统</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        nav ul li a:hover, nav ul li a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .hero .btn {
+            background-color: white;
+            color: var(--primary-color);
+            font-weight: bold;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .hero .btn:hover {
+            background-color: var(--light-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .feature-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 1.5rem;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            font-size: 1.3rem;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar ul li a {
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .sidebar ul li a:hover, .sidebar ul li a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .main-content h2 {
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 0.8rem;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .stat-card.success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .stat-card.warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .stat-card.danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:nth-child(even):hover {
+            background-color: #e9ecef;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.7rem 1.4rem;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-accent:hover {
+            background-color: #c0392b;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), #34495e);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        /* 页面显示/隐藏 */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .modal-header h3 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+        }
+        
+        .close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+        
+        .close:hover {
+            color: var(--accent-color);
+        }
+        
+        /* 通知 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 3000;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification.error {
+            background-color: var(--accent-color);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning-color);
+        }
+        
+        /* 搜索框 */
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid var(--light-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 状态标签 */
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .badge-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        /* 登录页面样式 */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-form {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        /* 用户信息面板 */
+        .user-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: var(--light-color);
+            border-radius: 8px;
+        }
+        
+        .logout-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        /* 报表样式 */
+        .report-container {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        /* 薪资明细表样式 */
+        .salary-detail {
+            margin-top: 1rem;
+        }
+        
+        .salary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .salary-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            font-weight: bold;
+            border-top: 2px solid #ddd;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">斯盖尔智能考勤与薪资系统</div>
+        <nav>
+            <ul>
+                <li><a href="#dashboard">首页</a></li>
+                <li><a href="#attendance">考勤管理</a></li>
+                <li><a href="#salary">薪资管理</a></li>
+                <li><a href="#reports">报表分析</a></li>
+                <li><a href="#settings">系统设置</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <section class="hero">
+            <h1>斯盖尔一体化智能考勤与薪资管理解决方案</h1>
+            <p>整合考勤数据与薪资核算，实现自动化流程，提高管理效率，降低人为错误，满足企业个性化需求。</p>
+            <a href="#dashboard" class="btn">开始使用</a>
+        </section>
+        
+        <section class="features">
+            <div class="feature-card">
+                <h3>数据一体化</h3>
+                <p>打破数据孤岛，实现考勤数据与薪资核算无缝对接，自动关联计算，减少人工干预。</p>
+            </div>
+            <div class="feature-card">
+                <h3>多设备支持</h3>
+                <p>支持多种考勤设备数据接入，统一平台管理，确保数据准确同步。</p>
+            </div>
+            <div class="feature-card">
+                <h3>灵活配置</h3>
+                <p>自定义薪资规则和工作流程，适应企业个性化需求，随业务发展灵活调整。</p>
+            </div>
+            <div class="feature-card">
+                <h3>智能分析</h3>
+                <p>提供多维度的数据分析和可视化报表，辅助管理决策。</p>
+            </div>
+        </section>
+        
+        <section class="dashboard">
+            <div class="sidebar">
+                <h3>功能导航</h3>
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active" data-page="dashboard">控制面板</a></li>
+                    <li><a href="#employees" class="nav-link" data-page="employees">员工管理</a></li>
+                    <li><a href="#attendance" class="nav-link" data-page="attendance">考勤记录</a></li>
+                    <li><a href="#leave" class="nav-link" data-page="leave">请假管理</a></li>
+                    <li><a href="#overtime" class="nav-link" data-page="overtime">加班管理</a></li>
+                    <li><a href="#salary" class="nav-link" data-page="salary">薪资核算</a></li>
+                    <li><a href="#reports" class="nav-link" data-page="reports">统计报表</a></li>
+                    <li><a href="#settings" class="nav-link" data-page="settings">系统设置</a></li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <!-- 控制面板页面 -->
+                <div id="page-dashboard" class="page active">
+                    <h2>控制面板</h2>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <h4>今日出勤</h4>
+                            <p>75%</p>
+                        </div>
+                        <div class="stat-card warning">
+                            <h4>本月迟到</h4>
+                            <p>8人</p>
+                        </div>
+                        <div class="stat-card danger">
+                            <h4>待审核请假</h4>
+                            <p>5条</p>
+                        </div>
+                        <div class="stat-card success">
+                            <h4>本月薪资总额</h4>
+                            <p>¥258,760</p>
+                        </div>
+                    </div>
+                    
+                    <h3>近期考勤异常</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>员工ID</th>
+                                <th>姓名</th>
+                                <th>日期</th>
+                                <th>异常类型</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-exceptions">
+                        </tbody>
+                    </table>
+                    
+                    <h3 style="margin-top: 2rem;">快速操作</h3>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <button class="btn" onclick="navigateTo('employees')">新增员工</button>
+                        <button class="btn" onclick="navigateTo('attendance')">批量导入考勤</button>
+                        <button class="btn" onclick="navigateTo('salary')">生成薪资单</button>
+                        <button class="btn-accent" onclick="navigateTo('settings')">系统设置</button>
+                    </div>
+                </div>
+                
+                <!-- 员工管理页面 -->
+                <div id="page-employees" class="page">
+                    <h2>员工管理</h2>
+                    <div class="search-box">
+                        <input type="text" id="employee-search" placeholder="搜索员工姓名、工号或部门...">
+                        <select id="employee-department-filter">
+                            <option value="">所有部门</option>
+                            <option value="技术部">技术部</option>
+                            <option value="人事部">人事部</option>
+                            <option value="财务部">财务部</option>
+                            <option value="市场部">市场部</option>
+                        </select>
+                        <button class="btn btn-success" onclick="openEmployeeModal()">+ 新增员工</button>
+                        <button class="btn" onclick="exportEmployees()">导出数据</button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>工号</th>
+                                <th>姓名</th>
+                                <th>部门</th>
+                                <th>职位</th>
+                                <th>入职日期</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employee-table">
+                        </tbody>
+                    </table>
+                </div>
+                
+<!-- 考勤记录页面 -->
+<div id="page-attendance" class="page">
+    <h2>考勤记录</h2>
+    <div class="search-box">
+        <!-- 将原来的单个日期输入框替换为日期范围 -->
+        <!-- <input type="date" id="attendance-date"> -->
+        <input type="date" id="attendance-start-date" placeholder="开始日期">
+        <input type="date" id="attendance-end-date" placeholder="结束日期">
+        
+        <select id="attendance-department-filter">
+            <option value="">所有部门</option>
+            <option value="技术部">技术部</option>
+            <option value="人事部">人事部</option>
+            <option value="财务部">财务部</option>
+            <option value="市场部">市场部</option>
+        </select>
+        <select id="attendance-status-filter">
+            <option value="">全部状态</option>
+            <option value="正常">正常</option>
+            <option value="迟到">迟到</option>
+            <option value="早退">早退</option>
+            <option value="缺勤">缺勤</option>
+        </select>
+        <button class="btn" onclick="searchAttendance()">查询</button>
+        <button class="btn btn-success" onclick="openClockInModal()">打卡</button>
+        <button class="btn" onclick="importAttendance()">导入考勤</button>
+    </div>
+    
+  
+    <div class="search-box" style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+        <h3>个人考勤查询</h3>
+        <select id="personal-attendance-employee">
+            <option value="">选择员工</option>
+        </select>
+        <input type="date" id="personal-attendance-start-date" placeholder="开始日期">
+        <input type="date" id="personal-attendance-end-date" placeholder="结束日期">
+        <button class="btn btn-success" onclick="searchPersonalAttendance()">查询个人考勤</button>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>员工ID</th>
+                <th>姓名</th>
+                <th>部门</th>
+                <th>日期</th>
+                <th>上班时间</th>
+                <th>下班时间</th>
+                <th>工作时长</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="attendance-table">
+        </tbody>
+    </table>
+</div>
+                
+                <!-- 请假管理页面 -->
+                <div id="page-leave" class="page">
+                    <h2>请假管理</h2>
+                    <div class="search-box">
+                        <input type="text" id="leave-search" placeholder="搜索员工姓名...">
+                        <select id="leave-status-filter">
+                            <option value="">全部状态</option>
+                            <option value="待审核">待审核</option>
+                            <option value="已批准">已批准</option>
+                            <option value="已拒绝">已拒绝</option>
+                        </select>
+                        <button id="leave-search-btn" class="btn">查询</button>
+                        <button class="btn btn-success" onclick="openLeaveModal()">+ 申请请假</button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>员工ID</th>
+                                <th>姓名</th>
+                                <th>请假类型</th>
+                                <th>开始日期</th>
+                                <th>结束日期</th>
+                                <th>天数</th>
+                                <th>原因</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leave-table">
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 加班管理页面 -->
+                <div id="page-overtime" class="page">
+                    <h2>加班管理</h2>
+                    <div class="search-box">
+                        <input type="text" id="overtime-search" placeholder="搜索员工姓名...">
+                        <input type="month" id="overtime-month">
+                        <button class="btn" onclick="searchOvertime()">查询</button>
+                        <button class="btn btn-success" onclick="openOvertimeModal()">+ 申请加班</button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>员工ID</th>
+                                <th>姓名</th>
+                                <th>加班日期</th>
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                                <th>加班时长</th>
+                                <th>加班原因</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="overtime-table">
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 薪资核算页面 -->
+                <div id="page-salary" class="page">
+                    <h2>薪资核算</h2>
+                    <div class="search-box">
+                        <select id="salary-month">
+                            <option value="2026-01">2026年1月</option>
+                            <option value="2026-02">2026年2月</option>
+                            <option value="2026-03">2026年3月</option>
+                            <option value="2026-04">2026年4月</option>
+                            <option value="2026-05">2026年5月</option>
+                            <option value="2026-06">2026年6月</option>
+                            <option value="2026-07">2026年7月</option>
+                            <option value="2026-08">2026年8月</option>
+                            <option value="2026-09">2026年9月</option>
+                            <option value="2026-010">2026年10月</option>
+                            <option value="2026-011">2026年11月</option>
+                            <option value="2026-12" selected>2026年12月</option>
+                        </select>
+                        <select id="salary-department">
+                            <option value="">所有部门</option>
+                            <option value="技术部">技术部</option>
+                            <option value="人事部">人事部</option>
+                            <option value="财务部">财务部</option>
+                            <option value="市场部">市场部</option>
+                        </select>
+                        <!-- 新增员工筛选 -->
+                        <select id="salary-employee-filter">
+                        <option value="">所有员工</option>
+                        </select>
+                        <button class="btn" onclick="calculateSalary()">计算薪资</button>
+                        <button class="btn btn-success" onclick="generateSalarySheet()">生成工资单</button>
+                        <button class="btn" onclick="exportSalary()">导出报表</button>
+                    </div>
+                    
+     <div class="search-box" style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+        <h3>个人薪资查询</h3>
+        <select id="personal-salary-employee">
+            <option value="">选择员工</option>
+        </select>
+        <select id="personal-salary-month">
+            <option value="2026-01">2026年1月</option>
+            <option value="2026-02">2026年2月</option>
+            <option value="2026-03">2026年3月</option>
+            <option value="2026-04">2026年4月</option>
+            <option value="2026-05">2026年5月</option>
+            <option value="2026-06">2026年6月</option>
+            <option value="2026-07">2026年7月</option>
+            <option value="2026-08">2026年8月</option>
+            <option value="2026-09">2026年9月</option>
+            <option value="2026-010">2026年10月</option>
+            <option value="2026-011">2026年11月</option>
+            <option value="2026-12" selected>2026年12月</option>
+        </select>
+        <button class="btn btn-success" onclick="searchPersonalSalary()">查询个人薪资</button>
+     </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>员工ID</th>
+                                <th>姓名</th>
+                                <th>部门</th>
+                                <th>基本工资</th>
+                                <th>加班费</th>
+                                <th>奖金</th>
+                                <th>交通补贴</th>
+                                <th>餐补</th>
+                                <th>社保扣款</th>
+                                <th>公积金扣款</th>
+                                <th>个税</th>
+                                <th>其他扣款</th>
+                                <th>实发工资</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salary-table">
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 统计报表页面 -->
+                <div id="page-reports" class="page">
+                    <h2>统计报表</h2>
+                    <div class="search-box">
+                        <input type="month" id="report-month" value="2026-06">
+                        <select id="report-type">
+                            <option value="attendance">考勤报表</option>
+                            <option value="salary">薪资报表</option>
+                            <option value="department">部门统计</option>
+                        </select>
+                        <select id="report-period">
+                            <option value="daily">日报</option>
+                            <option value="weekly">周报</option>
+                            <option value="monthly" selected>月报</option>
+                            <option value="annual">年报</option>
+                        </select>
+                        <button class="btn" onclick="generateReport()">生成报表</button>
+                        <button class="btn" onclick="exportReport()">导出报表</button>
+                    </div>
+                    
+                    <div class="stats" style="margin-top: 2rem;">
+                        <div class="stat-card">
+                            <h4>总出勤率</h4>
+                            <p>80.5%</p>
+                        </div>
+                        <div class="stat-card warning">
+                            <h4>迟到次数</h4>
+                            <p>45次</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>加班总时长</h4>
+                            <p>128h</p>
+                        </div>
+                        <div class="stat-card success">
+                            <h4>人均出勤</h4>
+                            <p>21.5天</p>
+                        </div>
+                    </div>
+                    
+                    <h3>报表详情</h3>
+                    <div id="report-content" class="report-container">
+                        <p style="color: #666;">请选择报表类型并点击"生成报表"按钮</p>
+                    </div>
+                </div>
+                
+                <!-- 系统设置页面 -->
+                <div id="page-settings" class="page">
+                    <h2>系统设置</h2>
+                    
+                    <div style="display: grid; gap: 1.5rem;">
+                        <div class="feature-card">
+                            <h3>考勤设置</h3>
+                            <div class="form-group">
+                                <label>上班时间</label>
+                                <input type="time" id="work-start-time" value="09:00">
+                            </div>
+                            <div class="form-group">
+                                <label>下班时间</label>
+                                <input type="time" id="work-end-time" value="18:00">
+                            </div>
+                            <div class="form-group">
+                                <label>迟到阈值（分钟）</label>
+                                <input type="number" id="late-threshold" value="15" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>早退阈值（分钟）</label>
+                                <input type="number" id="early-leave-threshold" value="30" min="0">
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <h3>薪资设置</h3>
+                            <div class="form-group">
+                                <label>加班费倍率</label>
+                                <input type="number" id="overtime-rate" value="1.5" step="0.1" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label>周末加班费倍率</label>
+                                <input type="number" id="weekend-overtime-rate" value="2" step="0.1" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label>节假日加班费倍率</label>
+                                <input type="number" id="holiday-overtime-rate" value="3" step="0.1" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label>交通补贴（元/月）</label>
+                                <input type="number" id="transportation-allowance" value="200" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>餐补（元/天）</label>
+                                <input type="number" id="meal-allowance" value="30" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>社保缴纳比例（%）</label>
+                                <input type="number" id="social-security-rate" value="10" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label>公积金缴纳比例（%）</label>
+                                <input type="number" id="housing-fund-rate" value="10" min="0" max="100">
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <h3>系统管理</h3>
+                            <div class="form-group">
+                                <label>公司名称</label>
+                                <input type="text" id="company-name" value="示例科技有限公司">
+                            </div>
+                            <div class="form-group">
+                                <label>管理员邮箱</label>
+                                <input type="email" id="admin-email" value="admin@company.com">
+                            </div>
+                            <button class="btn" onclick="saveSettings()">保存设置</button>
+                            <button class="btn btn-accent" onclick="resetData()">重置数据</button>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <h3>用户管理</h3>
+                            <div class="form-group">
+                                <label>用户名</label>
+                                <input type="text" id="username" placeholder="输入用户名">
+                            </div>
+                            <div class="form-group">
+                                <label>密码</label>
+                                <input type="password" id="password" placeholder="输入密码">
+                            </div>
+                            <button class="btn" onclick="addUser()">添加用户</button>
+                            
+                            <table style="margin-top: 1rem;">
+                                <thead>
+                                    <tr>
+                                        <th>用户名</th>
+                                        <th>角色</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-table">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 模态框：新增/编辑员工 -->
+        <div id="employee-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="employee-modal-title">新增员工</h3>
+                    <button class="close" onclick="closeEmployeeModal()">&times;</button>
+                </div>
+                <form id="employee-form" onsubmit="saveEmployee(event)">
+                    <input type="hidden" id="employee-id">
+                    <div class="form-group">
+                        <label>工号 *</label>
+                        <input type="text" id="employee-code" required>
+                    </div>
+                    <div class="form-group">
+                        <label>姓名 *</label>
+                        <input type="text" id="employee-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>部门 *</label>
+                        <select id="employee-department" required>
+                            <option value="">请选择部门</option>
+                            <option value="技术部">技术部</option>
+                            <option value="人事部">人事部</option>
+                            <option value="财务部">财务部</option>
+                            <option value="市场部">市场部</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>职位 *</label>
+                        <input type="text" id="employee-position" required>
+                    </div>
+                    <div class="form-group">
+                        <label>入职日期 *</label>
+                        <input type="date" id="employee-join-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>基本工资 *</label>
+                        <input type="number" id="employee-salary" required min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>联系电话</label>
+                        <input type="tel" id="employee-phone">
+                    </div>
+                    <div class="form-group">
+                        <label>状态</label>
+                        <select id="employee-status">
+                            <option value="在职">在职</option>
+                            <option value="离职">离职</option>
+                            <option value="休假">休假</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">保存</button>
+                    <button type="button" class="btn btn-accent" onclick="closeEmployeeModal()">取消</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 模态框：打卡 -->
+        <div id="clockin-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>打卡</h3>
+                    <button class="close" onclick="closeClockInModal()">&times;</button>
+                </div>
+                <form id="clockin-form" onsubmit="saveClockIn(event)">
+                    <div class="form-group">
+                        <label>选择员工 *</label>
+                        <select id="clockin-employee" required>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>打卡类型 *</label>
+                        <select id="clockin-type" required>
+                            <option value="上班">上班</option>
+                            <option value="下班">下班</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>打卡时间</label>
+                        <input type="datetime-local" id="clockin-time" required>
+                    </div>
+                    <div class="form-group">
+                        <label>备注</label>
+                        <textarea id="clockin-remark"></textarea>
+                    </div>
+                    <button type="submit" class="btn">确认打卡</button>
+                    <button type="button" class="btn btn-accent" onclick="closeClockInModal()">取消</button>
+                </form>
+            </div>
+        </div>
+        
+        <div id="import-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="import-modal-title">导入考勤数据</h3>
+                    <button class="close" onclick="closeImportModal()">&times;</button>
+                </div>
+                <div class="upload-area" id="file-upload-area">
+                    <div class="upload-placeholder" style="text-align: center; padding: 2rem; border: 2px dashed #ccc; border-radius: 8px;">
+                        <p>拖拽文件到这里或点击下方按钮选择文件</p>
+                        <input type="file" id="import-file" accept=".xlsx,.xls,.csv" style="display: none;">
+                        <button class="btn" onclick="document.getElementById('import-file').click()">选择文件</button>
+                    </div>
+                    <div id="file-info" style="display: none; padding: 1rem; background-color: #f8f9fa; border-radius: 8px; margin-top: 1rem;"></div>
+                </div>
+                <div id="import-progress" style="display: none; margin: 1rem 0;">
+                    <div style="background-color: #e0e0e0; border-radius: 10px; overflow: hidden;">
+                        <div id="progress-fill" style="height: 20px; background-color: var(--primary-color); width: 0%; transition: width 0.3s;"></div>
+                    </div>
+                    <p id="progress-text" style="text-align: center; margin-top: 0.5rem;">准备导入...</p>
+                </div>
+                <div id="import-options" style="margin: 1rem 0; display: flex; gap: 1rem; align-items: center;">
+                    <label>
+                        <input type="checkbox" id="overwrite-existing" checked> 覆盖现有数据
+                    </label>
+                    <label>
+                        <input type="checkbox" id="skip-errors" checked> 跳过错误记录
+                    </label>
+                </div>
+                <div id="import-results" style="display: none; margin-top: 1rem; padding: 1rem; background-color: #f8f9fa; border-radius: 8px;"></div>
+                <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button class="btn" onclick="downloadTemplate()">下载模板</button>
+                    <button class="btn btn-success" onclick="startImport()">开始导入</button>
+                    <button class="btn btn-accent" onclick="closeImportModal()">取消</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 模态框：请假申请 -->
+        <div id="leave-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>请假申请</h3>
+                    <button class="close" onclick="closeLeaveModal()">&times;</button>
+                </div>
+                <form id="leave-form" onsubmit="saveLeave(event)">
+                    <div class="form-group">
+                        <label>选择员工 *</label>
+                        <select id="leave-employee" required>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>请假类型 *</label>
+                        <select id="leave-type" required>
+                            <option value="事假">事假</option>
+                            <option value="病假">病假</option>
+                            <option value="年假">年假</option>
+                            <option value="调休">调休</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>开始日期 *</label>
+                        <input type="date" id="leave-start-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>结束日期 *</label>
+                        <input type="date" id="leave-end-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>请假天数 *</label>
+                        <input type="number" id="leave-days" required min="0.5" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label>请假原因 *</label>
+                        <textarea id="leave-reason" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">提交申请</button>
+                    <button type="button" class="btn btn-accent" onclick="closeLeaveModal()">取消</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 模态框：加班申请 -->
+        <div id="overtime-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>加班申请</h3>
+                    <button class="close" onclick="closeOvertimeModal()">&times;</button>
+                </div>
+                <form id="overtime-form" onsubmit="saveOvertime(event)">
+                    <div class="form-group">
+                        <label>选择员工 *</label>
+                        <select id="overtime-employee" required>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>加班日期 *</label>
+                        <input type="date" id="overtime-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>开始时间 *</label>
+                        <input type="time" id="overtime-start-time" required>
+                    </div>
+                    <div class="form-group">
+                        <label>结束时间 *</label>
+                        <input type="time" id="overtime-end-time" required>
+                    </div>
+                    <div class="form-group">
+                        <label>加班时长（小时） *</label>
+                        <input type="number" id="overtime-hours" required min="0.5" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label>加班原因 *</label>
+                        <textarea id="overtime-reason" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">提交申请</button>
+                    <button type="button" class="btn btn-accent" onclick="closeOvertimeModal()">取消</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2026 智能考勤与薪资管理系统 | 版本 1.0.0</p>
+    </footer>
+    
+<script src="xlsx.full.min.js"></script>
+   <script src="utils.js"></script>
+   <script src="DataManager.js"></script>
+   <script src="EmployeeModule.js"></script>
+   <script src="AttendanceModule.js"></script>
+   <script src="ApprovalModule.js"></script>
+   <script src="app2.js"></script>
+</body>
+</html>ml>
+    
+   
